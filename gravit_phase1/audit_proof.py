@@ -1,20 +1,12 @@
-"""Deterministic SHA-256 audit proof. Any third party can recompute."""
+"""Deterministic SHA-256 audit proof."""
 import hashlib
 import json
-from typing import List, Any
 from .schemas import VerificationRequest, VerificationResult
 
 
 class AuditProof:
-    """Generates and verifies deterministic audit proofs."""
-
     @staticmethod
     def compute_trace_id(request: VerificationRequest, result: VerificationResult) -> str:
-        """Compute SHA-256 hash over (reasoning_chain, context, truth_vector, decision).
-
-        This is deterministic — any third party with the same inputs will get the same trace_id.
-        """
-        # Convert to serializable dicts
         data = {
             "reasoning_chain": [
                 {
@@ -42,13 +34,10 @@ class AuditProof:
             "decision": result.decision.value,
             "timestamp": result.timestamp
         }
-
-        # Deterministic JSON serialization (sort_keys=True)
         json_str = json.dumps(data, sort_keys=True, separators=(",", ":"))
         return hashlib.sha256(json_str.encode()).hexdigest()
 
     @staticmethod
     def verify_trace_id(request: VerificationRequest, result: VerificationResult) -> bool:
-        """Verify that the trace_id in result matches recomputed value."""
         expected = AuditProof.compute_trace_id(request, result)
         return expected == result.trace_id

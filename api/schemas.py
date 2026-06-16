@@ -27,7 +27,6 @@ class DecisionAPI(str, Enum):
 
 
 class ReasoningStepAPI(BaseModel):
-    """A single step in the agent's reasoning chain."""
     text: str
     source_type: SourceTypeAPI
     action_type: ActionTypeAPI
@@ -35,7 +34,6 @@ class ReasoningStepAPI(BaseModel):
 
 
 class ContextAPI(BaseModel):
-    """External context for verification."""
     kyc_verified: bool = False
     daily_limit_used: float = 0.0
     daily_limit_total: float = 10000.0
@@ -44,18 +42,12 @@ class ContextAPI(BaseModel):
 
 
 class VerificationRequestAPI(BaseModel):
-    """Request to verify an agent's intended action.
-
-    IMPORTANT: No field for agent self-reported confidence.
-    Trust is computed, not claimed.
-    """
     reasoning_chain: List[ReasoningStepAPI]
     context: ContextAPI = Field(default_factory=ContextAPI)
     proposed_action: ActionTypeAPI
 
 
 class TruthVectorAPI(BaseModel):
-    """Four-dimensional trust metric."""
     anchor_integrity: float
     dependency_validity: float
     policy_compliance: float
@@ -63,7 +55,6 @@ class TruthVectorAPI(BaseModel):
 
 
 class VerificationResponseAPI(BaseModel):
-    """Response from epistemic verification."""
     decision: DecisionAPI
     trust_score: float
     truth_vector: TruthVectorAPI

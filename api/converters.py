@@ -1,4 +1,4 @@
-"""Converters between API Pydantic models and internal dataclasses."""
+"""Converters between API and internal models."""
 from gravit_phase1.schemas import (
     VerificationRequest, VerificationResult,
     ReasoningStep, Context, ActionType, SourceType,
@@ -12,7 +12,6 @@ from .schemas import (
 
 
 def api_request_to_internal(api_req: VerificationRequestAPI) -> VerificationRequest:
-    """Convert API request to internal dataclass."""
     reasoning_chain = [
         ReasoningStep(
             text=step.text,
@@ -39,7 +38,6 @@ def api_request_to_internal(api_req: VerificationRequestAPI) -> VerificationRequ
 
 
 def internal_result_to_api(internal_res: VerificationResult) -> VerificationResponseAPI:
-    """Convert internal result to API response."""
     return VerificationResponseAPI(
         decision=DecisionAPI(internal_res.decision.value),
         trust_score=internal_res.trust_score,
