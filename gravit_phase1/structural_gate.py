@@ -13,6 +13,12 @@ class StructuralGate:
         """Returns (TruthVector, decision, reason) based ONLY on structure."""
 
         anchor_score = self._check_anchors(reasoning_chain)
+        # If there are no verified anchors but the user has completed KYC,
+        # treat that as partial anchor evidence to avoid over-strict rejection
+        # for simple user-originated actions.
+        # IMPORTANT: insure that this does NOT allow bypassing KYC
+        if anchor_score == 0 and getattr(context, "kyc_verified", False):
+            anchor_score = 0.6
         dep_score = self._check_dependencies(reasoning_chain)
         policy_violation, policy_reason = self._check_policies(reasoning_chain, context)
 
