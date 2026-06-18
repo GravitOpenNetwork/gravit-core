@@ -1,0 +1,16 @@
+STRUCTURE.md
+__pycache__/
+*.py[cod]
+*.so
+.Python
+env/
+venv/
+.env
+.venv
+.pytest_cache/
+.coverage
+htmlcov/
+.vscode/
+.idea/
+*.log
+.DS_Store
